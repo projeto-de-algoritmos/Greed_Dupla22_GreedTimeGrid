@@ -1,30 +1,59 @@
 'use strict'
-
-const {Event, Events} = require('./event');
-
+const {Heap} = require('./heap');
 class Schedule {
-
   schedulesByDate = {};
-  notSelected = [];
+  // notSelected = [];
   constructor(events) {
     this.events = events ;
+    this.heapManager = new Heap();
     [... new Set(this.events.dates)].forEach(date => this.schedulesByDate[date] = []);
   } 
+
+  removeFromHeap(list) {
+    if (list.length == 1) return null;
+    if (list.length == 2) return list.pop();
+    const prevRoot = list[1];
+    list[1] = list.pop();
+    this.heapManager.heapifyDown(list);
+    console.log("Numero Removido: ", prevRoot);
+    return prevRoot;
+
+  }
 
   computeNeededRooms() {
     this.events.orderByStart();
     this.events.splitByDate();
     const dates = this.events.eventsByDate;
     let rooms = 1;
-    let selected = [];
     for (const date of Object.keys(dates) ){
+      let heap = [-1];
+      console.log('Heap start: ', heap);
       let auxRooms = 1;
       for(const event of dates[date]) {
         let start = event.start;
         let timeConflict = false;
 
-        for (const ev of selected) {
-          if (start.getTime() < ev.end.getTime()) {
+        if (heap.length === 1) heap.push(event);
+        else {
+          const ev = heap[1];
+          console.log(ev);
+          if(start >= ev.end) {
+            this.removeFromHeap(heap);
+            heap.push(event);
+            if(heap.length > 1) this.heapManager.heapifyUp(heap);
+          } else {
+            console.debug('----------------------------')
+            console.debug('Conflict !!!!')
+            console.debug(event, 'vs', ev)
+            console.debug('----------------------------')
+
+            ++auxRooms;
+            heap.push(event);
+            if(heap.length > 1) this.heapManager.heapifyUp(heap);
+          }
+        }
+        /**
+        if (start.getTime() < ev.end.getTime()) {
             console.debug('----------------------------')
             console.debug('Conflict !!!!')
             console.debug(event, 'vs', ev)
@@ -32,15 +61,16 @@ class Schedule {
             timeConflict  = true;
             break;
           }
-        }
 
         if(timeConflict) {
           ++auxRooms;
+          heap.push(event);
+          this.heapManager.heapifyUp(heap)
         }
-        selected.push(event);
+        */
       }
       rooms = Math.max(rooms, auxRooms);
-      selected = [];
+      //heap = [];
     }
 
     this.events.rooms = rooms;
