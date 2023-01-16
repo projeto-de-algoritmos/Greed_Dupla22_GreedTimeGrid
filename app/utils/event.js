@@ -24,10 +24,12 @@ class Events {
   eventArray = [];
   eventsDates  = {};
   dates = [];
+  // heap = [];
   constructor(events = [], rooms = 0) {
     this.eventArray = events.copyWithin(-1, 0);
     this.rooms = rooms;
     this.setDates(events);
+    // this.heap = [-1, 5, 10, 20, 14, 16, 24, 26];
   }
 
   add(ev) {
@@ -84,6 +86,17 @@ class Events {
     this.eventArray = this.eventArray.sort((e1, e2) => e1.end.getMilliseconds()- e2.end.getMilliseconds());
     console.log(this.eventArray);
   }
+
+  // IntervalPartitioning() {
+  //   for (let index = 1; index < eventArray.length; index++) {
+  //     if(eventArray[index].start <= this.heap[1]) { 
+  //       // addEventInRoom(); // Atualizar Heap (Data de final) e adicionar evento na room
+  //     } else {
+  //       // addEventInNewRoom(); // Criar nova room e adicionar evento nela, adicionar nova classe na Heap(Data de final)
+  //     }
+      
+  //   }
+  // }
 }
 
 module.exports = {Event,Events}
