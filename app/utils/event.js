@@ -11,18 +11,11 @@ class Event {
   }
 }
 
-/*
- * Events in rooms:
- * {'dateAsId': [
-*     [Event1, ..., EventN],   //room 1
-*     [EventN+1, ..., EventZ]  //room 2
-*     ...
-*  ]}-> Each event happenning in the room}
-*/
+
 class Events {
   rooms = 0;
   eventArray = [];
-  eventsDates  = {};
+  eventsByDate  = {}
   dates = [];
   constructor(events = [], rooms = 0) {
     this.eventArray = events.copyWithin(-1, 0);
@@ -37,12 +30,10 @@ class Events {
 
   addDate(ev) {
     const dateEv = [ev.year, ev.month + 1, ev.dayOfMonth].join('-');
-    if (!this.dates.find((_t, d) => d === dateEv)) {
+    if (!this.dates.find((v) => v === dateEv)) {
       console.log('Not found');
       this.dates.push(dateEv)
-      this.eventsDates [dateEv] = []
-      console.log(this.dates);
-      console.log(this.eventsDates );
+      this.eventsByDate[dateEv] = []
     }
   }
 
@@ -52,37 +43,29 @@ class Events {
     this.dates = events.map((ev) => {
       return [ev.year, ev.month + 1, ev.dayOfMonth].join('-');
     })
-    let temp = [];
-    this.dates = this.dates.filter((date) => {
-      if (!temp.find((_t, d) => d === date) ){
-        temp.push(date);
-        return true;
-      }
-
-      return false;
-    });
-
-    this.dates.forEach((date) => this.eventsDates [date] = []);
+    let uniqueDates = [... new Set(this.dates)];
+    uniqueDates.forEach((date) => this.eventsByDate[date] = []);
+    this.splitByDate();
     console.log(this.dates);
-    console.log(this.eventsDates );
+    console.log(this.eventsByDate );
   }
 
   orderByStart() {
-    //let temp = [[5, 8], [7,7], [9,10], [9,9]];
-    //temp = temp.sort((e1, e2) => e1[0] - e2[0]);
-    //console.log('temp', temp);
-    console.log('orderByStart');
-    this.eventArray = this.eventArray.sort((e1, e2) => e1.start.getMilliseconds() - e2.start.getMilliseconds());
-    console.log(this.eventArray);
+    this.eventArray = this.eventArray.sort((e1, e2) => e1.start.getTime() - e2.start.getTime());
   }
 
   orderByEnd() {
-    //let temp = [[5, 8], [7,7], [9,10], [9,9]];
-    //temp = temp.sort((e1, e2) => e1[1] - e2[1]);
-    //console.log('temp', temp);
-    console.log('orderByEnd');
-    this.eventArray = this.eventArray.sort((e1, e2) => e1.end.getMilliseconds()- e2.end.getMilliseconds());
-    console.log(this.eventArray);
+    this.eventArray = this.eventArray.sort((e1, e2) => e1.end.getTime() - e2.end.getTime());
+  }
+
+  splitByDate() {
+    Object.keys(this.eventsByDate).forEach((date) => { 
+      this.eventsByDate[date] = [];
+    })
+    this.eventArray.forEach((date) => {
+      let dateString = [date.year, date.month + 1, date.dayOfMonth].join('-');
+      this.eventsByDate[dateString].push(date);
+    })
   }
 }
 

@@ -1,4 +1,5 @@
 const {Event, Events} = require('./utils/event');
+const {Schedule} = require('./utils/schedule');
 
 const events = new Events([new Event(new Date(Date.now()), new Date(Date.now() + 50000.0), 'Apresentação') ]);
 
@@ -9,3 +10,9 @@ events.add(new Event(new Date('2022-05-12T11:40:00'), new Date('2022-05-12T11:42
 
 events.orderByStart();
 events.orderByEnd();
+
+const schedule = new Schedule(events);
+console.log(schedule.computeNeededRooms());
+schedule.computeSchedulesPartitionByDate();
+console.log(schedule.schedulesByDate);
+console.log(schedule.notSelected);
