@@ -8,7 +8,9 @@ class Event {
     this.start = start;
     this.end = end;
     this.desc = desc;
+    this.scheduled = false;
   }
+  setScheduled() {this.scheduled = true;}
 }
 
 

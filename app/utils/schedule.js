@@ -65,35 +65,42 @@ class Schedule {
 
     for (const date of Object.keys(this.schedulesByDate)) {
       let roomForDate = 0;
-      let eventIndexForDate = 0;
+      let scheduleCount = 0;
       while (rooms--) {
-        if (this.events.eventsByDate[date].length <= 0) break;
-        this.partitionForRoom(roomForDate, date, eventIndexForDate);
+        if (this.events.eventsByDate[date].length <= scheduleCount) break;
+        this.schedulesByDate[date].push([]);
+        scheduleCount += this.partitionForRoom(roomForDate, date);
         ++roomForDate;
       }
       rooms = this.events.rooms;
-      this.notSelected.push(this.events.eventsByDate[date]); // All the used ones were removed
     }
   }
 
-  partitionForRoom(room, date, eventIndex) {
+  partitionForRoom(room, date) {
+    let scheduleCount = 0;
     this.schedulesByDate[date][room] = [];
+    console.log('Empty schedules: ', this.schedulesByDate[date][room] );
     this.events.eventsByDate[date].forEach((ev, ind) => {
       let conflict = false;
-      for (const processedEv of this.schedulesByDate[date][room]) {
-        if (ev.start.getTime() < processedEv.end.getTime()) {
-          conflict = true;
-          break;
+      if (!ev.scheduled) {
+        for (const processedEv of this.schedulesByDate[date][room]) {
+          if (ev.start.getTime() < processedEv.end.getTime()) {
+            conflict = true;
+            break;
+          }
+        }
+
+        if (!conflict) {
+          this.schedulesByDate[date][room].push(ev);
+          ev.scheduled = true;
+          ++scheduleCount;
         }
       }
-      if (!conflict) {
-        this.schedulesByDate[date][room].push(ev);
-      }
-      this.events.eventsByDate[date].splice(ind, 1);
     });
 
     console.debug('Already scheduled events: ', this.schedulesByDate[date]);
-    console.debug('Events missing: ', this.events.eventsByDate[date]);
+    console.log('Schedules done: ', scheduleCount)
+    return scheduleCount;
   }
 }
 
