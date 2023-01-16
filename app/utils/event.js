@@ -68,13 +68,21 @@ class Events {
   }
 
   orderByStart() {
+    //let temp = [[5, 8], [7,7], [9,10], [9,9]];
+    //temp = temp.sort((e1, e2) => e1[0] - e2[0]);
+    //console.log('temp', temp);
     console.log('orderByStart');
-    this.eventArray.sort((e1, e2) => e1.start - e2.start);
+    this.eventArray = this.eventArray.sort((e1, e2) => e1.start.getMilliseconds() - e2.start.getMilliseconds());
     console.log(this.eventArray);
   }
 
   orderByEnd() {
+    //let temp = [[5, 8], [7,7], [9,10], [9,9]];
+    //temp = temp.sort((e1, e2) => e1[1] - e2[1]);
+    //console.log('temp', temp);
     console.log('orderByEnd');
+    this.eventArray = this.eventArray.sort((e1, e2) => e1.end.getMilliseconds()- e2.end.getMilliseconds());
+    console.log(this.eventArray);
   }
 }
 
