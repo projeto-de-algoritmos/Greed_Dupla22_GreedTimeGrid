@@ -76,7 +76,7 @@ function Home() {
     function calculaSalas() {
         let events = new Events(eventList);
         let calcula = new Schedule(events);
-        setRooms1(calcula.computeNeededRooms());
+        setRooms(calcula.computeNeededRooms());
     }
 
     const textChange1 = (event) => {
