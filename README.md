@@ -11,9 +11,9 @@ O sistema consiste em uma forma de agendar eventos para descobrir o número de s
  
 ## Screenshots
 Print 1:
-![Aplicação 1](./assets/imagem.png)
+![Imagem 1](./assets/Imagem.png)
 Print 2:
-![Aplicação 2](./assets/imagem_1.png)
+![Imagem 2](./assets/Imagem_1.png)
 ## Instalação 
 **Linguagem**: Java Script<br>
 **Framework**: ReactJs<br>
