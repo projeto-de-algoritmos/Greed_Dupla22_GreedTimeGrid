@@ -20,7 +20,8 @@ class Events {
   eventsByDate  = {}
   dates = [];
   constructor(events = [], rooms = 0) {
-    this.eventArray = events.copyWithin(-1, 0);
+    console.log("Constructor:",events);
+    this.eventArray = events;
     this.rooms = rooms;
     this.setDates(events);
   }
